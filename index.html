@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apology Page</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to bottom, #ffb6c1, #ff9a9e);
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            position: relative;
+            padding: 20px;
+        }
+        .message-box {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 23px 28px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 auto;
+        }
+        .emoji {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        .button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background-color: #ff477e;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background-color: #ff1654;
+        }
+        .choice-buttons {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+        #no {
+            font-size: 20px;
+        }
+        .please-message {
+            font-size: 18px;
+            color: #ff1654;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            visibility: hidden;
+        }
+        .music-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        .final-page, .no-final-page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="emoji"><img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExczNndGl3eTVyMGJ4Zmd0ZnFtYzE0ODBkdjJrdnh5azE0MjM2dWcyYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/5djIFnUhjCMcJPNduG/giphy.gif" alt="Sorry Emoji" style="width: 250px; height: auto;"></div>
+    <div class="message-box" id="mainMessage">I'm really sorry for hurting you. That was never my intention, and I feel terrible about it. <br> Please forgive me 😔</div>
+    <button class="button" onclick="nextMessage()" id="nextButton">Next Message</button>
+    <button class="button music-button" onclick="toggleMusic()">Turn Music On</button>
+    <audio id="music" src="song.mp3" loop></audio>
+
+    <div class="second-page message-box" style="display: none">I feel awful for making you cry. I should have been more responsible, and I completely understand if you’re upset. <br> I just want you to know I’ll do everything I can to regain your trust.</div>
+    
+    <div class="choice-buttons" id="choiceButtons">
+        <div class="message-box">Will you forgive me?</div>
+        <button class="button" id="yes" onclick="showFinalPage()">Yes</button>
+        <div>
+            <button class="button" id="no" onclick="shrinkNo()">No</button>
+            <div class="please-message" id="pleaseMessage">Please🥺</div>
+        </div>
+    </div>
+
+    <div class="final-page" id="finalPage">
+        <div class="message-box">Thank you for giving me this chance. I promise I won’t let you down.</div>
+        <div class="emoji">🕺🎶</div>
+        <button class="button" onclick="replay()">Replay</button>
+    </div>
+    
+    <div class="no-final-page" id="noFinalPage">
+        <div class="message-box">I understand that you need time, and I don’t want to rush you. Just know that I’m truly sorry and will be here whenever you’re ready. <br> No matter how long it takes, I’ll wait.</div>
+        <button class="button" onclick="replay()">Replay</button>
+    </div>
+
+    <script>
+        let page = 1;
+        let noClickCount = 0;
+        const maxNoClicks = 12;
+
+        function nextMessage() {
+            var messageBox = document.querySelector('.message-box');
+            var nextButton = document.getElementById('nextButton');
+            
+            if (page === 1) {
+                messageBox.innerHTML = "I feel awful for making you cry. I should have been more responsible, and I completely understand if you’re upset. <br> I just want you to know I’ll do everything I can to regain your trust.";
+                page++;
+            } else {
+                messageBox.style.display = 'none';
+                nextButton.style.display = 'none';
+                document.getElementById('choiceButtons').style.display = 'flex';
+            }
+        }
+
+        function toggleMusic() {
+            var music = document.getElementById('music');
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+
+        function shrinkNo() {
+            var noButton = document.getElementById('no');
+            var yesButton = document.getElementById('yes');
+            var pleaseMessage = document.getElementById('pleaseMessage');
+            
+            var currentSize = parseInt(window.getComputedStyle(noButton).fontSize);
+            var currentYesSize = parseInt(window.getComputedStyle(yesButton).fontSize);
+            
+            if (noClickCount < maxNoClicks - 1) {
+                noButton.style.fontSize = (currentSize - 1) + 'px';
+                yesButton.style.fontSize = (currentYesSize + 1) + 'px';
+                noClickCount++;
+                pleaseMessage.style.visibility = 'visible';
+                pleaseMessage.style.fontSize = (18 + noClickCount) + 'px';
+            } else {
+                document.getElementById('choiceButtons').style.display = 'none';
+                document.getElementById('noFinalPage').style.display = 'flex';
+            }
+        }
+
+        function showFinalPage() {
+            document.getElementById('choiceButtons').style.display = 'none';
+            document.getElementById('finalPage').style.display = 'flex';
+        }
+
+        function replay() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
